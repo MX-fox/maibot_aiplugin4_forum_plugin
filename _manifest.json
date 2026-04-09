@@ -1,0 +1,9 @@
+{
+  "manifest_version": 1,
+  "name": "AIPlugin4 论坛插件",
+  "version": "1.0.0",
+  "description": "AIPlugin4 专用论坛功能，支持帖子浏览、搜索、发帖、评论等操作",
+  "author": {
+    "name": "错误、白鱼、暮星"
+  }
+}
