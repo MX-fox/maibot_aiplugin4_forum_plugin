@@ -8,7 +8,7 @@ from typing import List, Tuple, Type, Dict, Any, Optional
 
 import aiohttp
 
-from src.plugin_system import BasePlugin, register_plugin, ComponentInfo, ConfigField, BaseTool, BaseCommand
+from src.plugin_system import BasePlugin, register_plugin, ComponentInfo, ConfigField, BaseTool, BaseCommand, ToolParamType
 
 logger = logging.getLogger("forum_plugin")
 
@@ -237,9 +237,9 @@ class ForumGetPostsTool(ForumBaseTool):
     description = "获取AIPlugin论坛的帖子列表"
     available_for_llm = True
     parameters = [
-        ("sort", "string", "排序方式：newest(最新)、hot(热门)、most_comments(最多评论)、most_viewed(最多浏览)", False, "newest"),
-        ("page", "integer", "页码，默认1", False, 1),
-        ("limit", "integer", "每页数量，默认20，最大50", False, 20)
+        ("sort", ToolParamType.STRING, "排序方式：newest(最新)、hot(热门)、most_comments(最多评论)、most_viewed(最多浏览)", False, "newest"),
+        ("page", ToolParamType.INTEGER, "页码，默认1", False, 1),
+        ("limit", ToolParamType.INTEGER, "每页数量，默认20，最大50", False, 20)
     ]
 
     async def execute(self, function_args: Dict[str, Any]) -> Dict[str, Any]:
@@ -271,7 +271,7 @@ class ForumGetPostDetailTool(ForumBaseTool):
     description = "获取论坛帖子的详细内容和评论"
     available_for_llm = True
     parameters = [
-        ("post_id", "integer", "帖子ID", True, None)
+        ("post_id", ToolParamType.INTEGER, "帖子ID", True, None)
     ]
 
     async def execute(self, function_args: Dict[str, Any]) -> Dict[str, Any]:
@@ -320,11 +320,11 @@ class ForumSearchTool(ForumBaseTool):
     description = "搜索论坛帖子"
     available_for_llm = True
     parameters = [
-        ("q", "string", "搜索关键词", False, ""),
-        ("user", "string", "按用户名筛选", False, ""),
-        ("tag", "string", "按标签筛选", False, ""),
-        ("sort", "string", "排序方式：newest、hot、most_comments", False, "newest"),
-        ("page", "integer", "页码", False, 1)
+        ("q", ToolParamType.STRING, "搜索关键词", False, ""),
+        ("user", ToolParamType.STRING, "按用户名筛选", False, ""),
+        ("tag", ToolParamType.STRING, "按标签筛选", False, ""),
+        ("sort", ToolParamType.STRING, "排序方式：newest、hot、most_comments", False, "newest"),
+        ("page", ToolParamType.INTEGER, "页码", False, 1)
     ]
 
     async def execute(self, function_args: Dict[str, Any]) -> Dict[str, Any]:
@@ -365,10 +365,10 @@ class ForumCreatePostTool(ForumBaseTool):
     description = "在论坛创建新帖子，支持Markdown格式和图片上传"
     available_for_llm = True
     parameters = [
-        ("title", "string", "帖子标题，不超过200字符", True, ""),
-        ("content", "string", "帖子内容，支持Markdown格式", True, ""),
-        ("tags", "array", "帖子标签列表", False, []),
-        ("image_ids", "array", "要附带的图片ID列表，图片会自动上传", False, [])
+        ("title", ToolParamType.STRING, "帖子标题，不超过200字符", True, ""),
+        ("content", ToolParamType.STRING, "帖子内容，支持Markdown格式", True, ""),
+        ("tags", ToolParamType.ARRAY, "帖子标签列表", False, []),
+        ("image_ids", ToolParamType.ARRAY, "要附带的图片ID列表，图片会自动上传", False, [])
     ]
 
     async def execute(self, function_args: Dict[str, Any]) -> Dict[str, Any]:
@@ -437,11 +437,11 @@ class ForumManageCommentTool(ForumBaseTool):
     description = "管理论坛评论（支持创建、更新或删除操作）"
     available_for_llm = True
     parameters = [
-        ("action", "string", "操作类型：create、update或delete", True, ""),
-        ("post_id", "integer", "【仅用于create】目标帖子ID", False, None),
-        ("comment_id", "integer", "【仅用于update和delete】目标评论ID", False, None),
-        ("content", "string", "【仅用于create和update】评论内容", False, ""),
-        ("parent_id", "integer", "【仅用于create】父评论ID，用于回复某条评论", False, None)
+        ("action", ToolParamType.STRING, "操作类型：create、update或delete", True, ""),
+        ("post_id", ToolParamType.INTEGER, "【仅用于create】目标帖子ID", False, None),
+        ("comment_id", ToolParamType.INTEGER, "【仅用于update和delete】目标评论ID", False, None),
+        ("content", ToolParamType.STRING, "【仅用于create和update】评论内容", False, ""),
+        ("parent_id", ToolParamType.INTEGER, "【仅用于create】父评论ID，用于回复某条评论", False, None)
     ]
 
     async def execute(self, function_args: Dict[str, Any]) -> Dict[str, Any]:
@@ -541,11 +541,11 @@ class ForumManagePostTool(ForumBaseTool):
     description = "管理自己发布的论坛帖子（支持更新或删除操作）"
     available_for_llm = True
     parameters = [
-        ("action", "string", "操作类型：update或delete", True, ""),
-        ("post_id", "integer", "目标帖子ID", True, None),
-        ("title", "string", "【仅用于update】新标题", False, ""),
-        ("content", "string", "【仅用于update】新内容", False, ""),
-        ("tags", "array", "【仅用于update】新标签列表", False, [])
+        ("action", ToolParamType.STRING, "操作类型：update或delete", True, ""),
+        ("post_id", ToolParamType.INTEGER, "目标帖子ID", True, None),
+        ("title", ToolParamType.STRING, "【仅用于update】新标题", False, ""),
+        ("content", ToolParamType.STRING, "【仅用于update】新内容", False, ""),
+        ("tags", ToolParamType.ARRAY, "【仅用于update】新标签列表", False, [])
     ]
 
     async def execute(self, function_args: Dict[str, Any]) -> Dict[str, Any]:
